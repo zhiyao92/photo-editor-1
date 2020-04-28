@@ -28,7 +28,7 @@ public final class PhotoEditorViewController: UIViewController {
     @IBOutlet weak var deleteView: UIView!
     @IBOutlet weak var colorsCollectionView: UICollectionView!
     @IBOutlet weak var colorPickerView: UIView!
-    @IBOutlet weak var colorPickerViewBottomConstraint: NSLayoutConstraint!
+//    @IBOutlet weak var colorPickerViewBottomConstraint: NSLayoutConstraint!
     
     //Controls
     @IBOutlet weak var cropButton: UIButton!
@@ -38,7 +38,9 @@ public final class PhotoEditorViewController: UIViewController {
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var shareButton: UIButton!
     @IBOutlet weak var clearButton: UIButton!
-    
+
+    public var textView = UITextView()
+
     public var image: UIImage?
     /**
      Array of Stickers -UIImage- that the user will choose from
@@ -68,7 +70,9 @@ public final class PhotoEditorViewController: UIViewController {
     var activeTextView: UITextView?
     var imageViewToPan: UIImageView?
     var isTyping: Bool = false
-    
+    var showColor = false
+    var quote: String?
+    var author: String?
     
     var stickersViewController: StickersViewController!
 
@@ -124,6 +128,11 @@ public final class PhotoEditorViewController: UIViewController {
             UINib(nibName: "ColorCollectionViewCell", bundle: Bundle(for: ColorCollectionViewCell.self)),
             forCellWithReuseIdentifier: "ColorCollectionViewCell")
     }
+
+    public func configureQuote(_ quote: String?, author: String?) {
+        self.quote = quote
+        self.author = author
+    }
     
     func setImageView(image: UIImage) {
         imageView.image = image
@@ -141,16 +150,7 @@ public final class PhotoEditorViewController: UIViewController {
 
 extension PhotoEditorViewController: ColorDelegate {
     func didSelectColor(color: UIColor) {
-        if isDrawing {
-            self.drawColor = color
-        } else if activeTextView != nil {
-            activeTextView?.textColor = color
-            textColor = color
-        }
+        textView.textColor = color
+        textColor = color
     }
 }
-
-
-
-
-

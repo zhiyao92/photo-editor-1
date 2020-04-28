@@ -5,6 +5,7 @@
 //  Created by Mohamed Hamed on 5/4/17.
 //  Copyright © 2017 Mohamed Hamed. All rights reserved.
 //
+// he
 
 import UIKit
 import iOSPhotoEditor
@@ -61,10 +62,11 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         for i in 0...10 {
             photoEditor.stickers.append(UIImage(named: i.description )!)
         }
-        
+
         //To hide controls - array of enum control
         //photoEditor.hiddenControls = [.crop, .draw, .share]
         photoEditor.modalPresentationStyle = UIModalPresentationStyle.currentContext //or .overFullScreen for transparency
+        photoEditor.configureQuote("asdasd", author: "adssad")
         present(photoEditor, animated: true, completion: nil)
     }
     

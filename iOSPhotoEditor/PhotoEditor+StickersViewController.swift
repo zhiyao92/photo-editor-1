@@ -14,7 +14,7 @@ extension PhotoEditorViewController {
     func addStickersViewController() {
         stickersVCIsVisible = true
         hideToolbar(hide: true)
-        self.canvasImageView.isUserInteractionEnabled = false
+//        self.canvasImageView.isUserInteractionEnabled = false
         stickersViewController.stickersViewControllerDelegate = self
         
         for image in self.stickers {

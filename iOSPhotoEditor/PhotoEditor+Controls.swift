@@ -42,18 +42,12 @@ extension PhotoEditorViewController {
     }
 
     @IBAction func drawButtonTapped(_ sender: Any) {
-        isDrawing = true
-        canvasImageView.isUserInteractionEnabled = false
-        doneButton.isHidden = false
-        colorPickerView.isHidden = false
-        hideToolbar(hide: true)
+        showColor = !showColor
+        colorPickerView.isHidden = !showColor
     }
 
     @IBAction func textButtonTapped(_ sender: Any) {
-        isTyping = true
-        let textView = UITextView(frame: CGRect(x: 0, y: canvasImageView.center.y,
-                                                width: UIScreen.main.bounds.width, height: 30))
-        
+        textView.frame = calculateRectOfImageInImageView(imageView: imageView)
         textView.textAlignment = .center
         textView.font = UIFont(name: "Helvetica", size: 30)
         textView.textColor = textColor
@@ -64,10 +58,12 @@ extension PhotoEditorViewController {
         textView.layer.backgroundColor = UIColor.clear.cgColor
         textView.autocorrectionType = .no
         textView.isScrollEnabled = false
-        textView.delegate = self
+        textView.text = "\(quote ?? "") \n\n\(author ?? "")"
+        textView.isEditable = false
+        textView.isSelectable = false
+        textView.sizeToFit()
         self.canvasImageView.addSubview(textView)
         addGestures(view: textView)
-        textView.becomeFirstResponder()
     }    
     
     @IBAction func doneButtonTapped(_ sender: Any) {
@@ -113,6 +109,30 @@ extension PhotoEditorViewController {
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
+
+    func calculateRectOfImageInImageView(imageView: UIImageView) -> CGRect {
+        let imageViewSize = imageView.frame.size
+        let imgSize = imageView.image?.size
+
+        guard let imageSize = imgSize else {
+            return CGRect.zero
+        }
+
+        let scaleWidth = imageViewSize.width / imageSize.width
+        let scaleHeight = imageViewSize.height / imageSize.height
+        let aspect = fmin(scaleWidth, scaleHeight)
+
+        var imageRect = CGRect(x: 0, y: 0, width: imageSize.width * aspect, height: imageSize.height * aspect)
+        // Center image
+        imageRect.origin.x = (imageViewSize.width - imageRect.size.width) / 2
+        imageRect.origin.y = (imageViewSize.height - imageRect.size.height) / 2
+
+        // Add imageView offset
+        imageRect.origin.x += imageView.frame.origin.x
+        imageRect.origin.y += imageView.frame.origin.y
+
+        return imageRect
+    }
     
     func hideControls() {
         for control in hiddenControls {
@@ -131,9 +151,8 @@ extension PhotoEditorViewController {
             case .sticker:
                 stickerButton.isHidden = true
             case .text:
-                stickerButton.isHidden = true
+                textButton.isHidden = true
             }
         }
     }
-    
 }
