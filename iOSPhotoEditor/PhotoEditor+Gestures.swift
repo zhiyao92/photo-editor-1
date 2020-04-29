@@ -58,7 +58,7 @@ extension PhotoEditorViewController : UIGestureRecognizerDelegate  {
                                                   height: sizeToFit.height)
                 } else {
                     textView.increaseFontSize()
-                    let sizeToFit = textView.sizeThatFits(CGSize(width: textView.intrinsicContentSize.width,
+                    let sizeToFit = textView.sizeThatFits(CGSize(width: UIScreen.main.bounds.size.width,
                                                                  height:CGFloat.greatestFiniteMagnitude))
                     textView.bounds.size = CGSize(width: UIScreen.main.bounds.size.width - 32,
                                                   height: sizeToFit.height)
