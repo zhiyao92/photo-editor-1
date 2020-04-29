@@ -47,23 +47,23 @@ extension PhotoEditorViewController : UIGestureRecognizerDelegate  {
     @objc func pinchGesture(_ recognizer: UIPinchGestureRecognizer) {
         if let view = recognizer.view {
             if view is UITextView {
+                let pinchScale = recognizer.scale
                 let textView = view as! UITextView
-                
-                if textView.font!.pointSize * recognizer.scale < 90 {
-                    let font = UIFont(name: textView.font!.fontName, size: textView.font!.pointSize * recognizer.scale)
-                    textView.font = font
+
+                if pinchScale < 1 {
+                    textView.decreaseFontSize()
                     let sizeToFit = textView.sizeThatFits(CGSize(width: UIScreen.main.bounds.size.width,
                                                                  height:CGFloat.greatestFiniteMagnitude))
                     textView.bounds.size = CGSize(width: UIScreen.main.bounds.size.width - 32,
                                                   height: sizeToFit.height)
                 } else {
-                    let sizeToFit = textView.sizeThatFits(CGSize(width: UIScreen.main.bounds.size.width,
+                    textView.increaseFontSize()
+                    let sizeToFit = textView.sizeThatFits(CGSize(width: textView.intrinsicContentSize.width,
                                                                  height:CGFloat.greatestFiniteMagnitude))
-                    textView.bounds.size = CGSize(width: textView.intrinsicContentSize.width,
+                    textView.bounds.size = CGSize(width: UIScreen.main.bounds.size.width - 32,
                                                   height: sizeToFit.height)
+
                 }
-                
-                
                 textView.setNeedsDisplay()
             } else {
                 view.transform = view.transform.scaledBy(x: recognizer.scale, y: recognizer.scale)
@@ -227,5 +227,16 @@ extension PhotoEditorViewController : UIGestureRecognizerDelegate  {
             }
         }
         return imageviews
+    }
+}
+
+
+extension UITextView {
+    func increaseFontSize () {
+        self.font =  UIFont(name: self.font!.fontName, size: self.font!.pointSize+1)!
+    }
+
+    func decreaseFontSize () {
+        self.font =  UIFont(name: self.font!.fontName, size: self.font!.pointSize-1)!
     }
 }

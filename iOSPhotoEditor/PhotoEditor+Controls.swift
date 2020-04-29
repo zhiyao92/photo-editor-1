@@ -49,7 +49,7 @@ extension PhotoEditorViewController {
     @IBAction func textButtonTapped(_ sender: Any) {
         textView.frame = calculateRectOfImageInImageView(imageView: imageView)
         textView.textAlignment = .center
-        textView.font = UIFont(name: "Helvetica", size: 30)
+        textView.font = UIFont(name: "Marker Felt", size: 30)
         textView.textColor = textColor
         textView.layer.shadowColor = UIColor.black.cgColor
         textView.layer.shadowOffset = CGSize(width: 1.0, height: 0.0)
@@ -58,7 +58,7 @@ extension PhotoEditorViewController {
         textView.layer.backgroundColor = UIColor.clear.cgColor
         textView.autocorrectionType = .no
         textView.isScrollEnabled = false
-        textView.text = "\(quote ?? "") \n\n\(author ?? "")"
+        textView.text = quote ?? ""
         textView.isEditable = false
         textView.isSelectable = false
         textView.sizeToFit()
@@ -132,6 +132,37 @@ extension PhotoEditorViewController {
         imageRect.origin.y += imageView.frame.origin.y
 
         return imageRect
+    }
+
+    private func modifyText(_ quote: String?, author: String?) -> NSAttributedString? {
+        guard
+            let quoteText = quote,
+            let authorText = author else { return nil }
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+
+        let quoteAttributes: [NSAttributedString.Key: Any] = [
+            NSAttributedString.Key.paragraphStyle: paragraphStyle,
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular),
+            NSAttributedString.Key.foregroundColor: UIColor.black
+        ]
+
+        let authorAttributes: [NSAttributedString.Key: Any] = [
+            NSAttributedString.Key.paragraphStyle: paragraphStyle,
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10, weight: .semibold),
+            NSAttributedString.Key.foregroundColor: UIColor.black
+        ]
+
+        let joinText = [quoteText, authorText].joined(separator: "\n\n")
+        let attributedString = NSMutableAttributedString(string: joinText)
+        let range1 = attributedString.mutableString.range(of: quoteText)
+        let range2 = attributedString.mutableString.range(of: authorText)
+
+        attributedString.addAttributes(quoteAttributes, range: range1)
+        attributedString.addAttributes(authorAttributes, range: range2)
+
+        return attributedString
     }
     
     func hideControls() {
